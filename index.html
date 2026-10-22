@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#0b0b12"><meta name="description" content="Turn a little physics into your next satisfying video. Choose an Orbit Studio animation, customize the motion and music, and export for Shorts, Reels, and TikTok.">
+ <title>Orbit Studio — A little physics. Endless possibilities.</title>
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M25 23a12 12 0 1 1 2-11' fill='none' stroke='%23d5ff82' stroke-width='3'/%3E%3Ccircle cx='22' cy='10' r='4' fill='%23d5ff82'/%3E%3C/svg%3E">
+ <link rel="stylesheet" href="./home.css">
+</head>
+<body>
+ <a class="skip-link" href="#animations">Skip to animations</a>
+ <header class="site-header"><div class="header-inner wrap">
+  <a class="brand" href="./" aria-label="Orbit Studio home"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 23a12 12 0 1 1 2-11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="22" cy="10" r="4" fill="currentColor"/></svg><span>orbit<span class="brand-light">studio</span></span></a>
+  <nav aria-label="Main navigation"><a href="#animations">Animations</a><a href="#how-it-works">How it works</a><a href="#questions">Questions</a></nav>
+  <a class="button primary header-cta" href="./studio.html?animation=ring-escape">Open studio <span aria-hidden="true">↗</span></a>
+ </div></header>
+ <main>
+  <section class="hero wrap" aria-labelledby="hero-heading">
+   <div class="hero-copy"><p class="eyebrow"><span class="live-dot"></span> A LITTLE PHYSICS. ENDLESS POSSIBILITIES.</p>
+    <h1 id="hero-heading">Your next loop<br>starts with<br><span class="lime">a bounce.</span><svg class="headline-orbit" viewBox="0 0 92 60" fill="none" aria-hidden="true"><ellipse cx="45" cy="31" rx="38" ry="17" transform="rotate(-25 45 31)" stroke="currentColor" stroke-width="1.5"/><circle cx="75" cy="13" r="7" fill="currentColor"/></svg></h1>
+    <p class="hero-description">Turn simple motion into something hard to look away from. Pick an animation, add your own style, and make your next satisfying video.</p>
+    <div class="hero-actions"><a class="button primary large" href="#animations">Find your animation <span aria-hidden="true">↗</span></a><a class="text-link" href="#how-it-works"><span class="play-icon" aria-hidden="true">▷</span> How it works</a></div>
+    <p class="hero-note">No filming. No timeline to edit. Just create.</p>
+   </div>
+   <div class="hero-visual" aria-label="Ring Escape demonstration">
+    <div class="orbital-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="orbit-dot"></span></div>
+    <span class="visual-coordinate top-coordinate" aria-hidden="true">01 / RING ESCAPE</span>
+    <div class="demo-phone"><div class="phone-screen">
+     <div id="demo-fallback" class="demo-fallback" aria-hidden="true"></div>
+     <canvas id="home-animation" width="540" height="960" aria-label="Animated Ring Escape preview" hidden></canvas>
+     <div class="phone-heading">CAN IT FIND<br>THE WAY OUT?</div>
+     <div class="phone-bottom"><span class="live-dot"></span><span id="demo-status">Ring Escape</span></div>
+    </div><span class="phone-frame-corner" aria-hidden="true"></span></div>
+    <div class="demo-caption"><span class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Every bounce.<br><strong>A new possibility.</strong></span></div>
+    <div class="demo-controls"><div class="demo-colors" role="group" aria-label="Preview color theme"><button class="demo-color violet" data-demo-theme="0" aria-label="Violet preview" aria-pressed="true"></button><button class="demo-color aurora" data-demo-theme="1" aria-label="Aurora preview" aria-pressed="false"></button><button class="demo-color sunset" data-demo-theme="2" aria-label="Sunset preview" aria-pressed="false"></button></div><span>Make it your color.</span><button id="demo-toggle" class="demo-toggle" aria-label="Pause animation demo" hidden>Ⅱ</button></div>
+   </div>
+  </section>
+  <div class="spec-strip wrap" aria-label="Export capabilities"><span>MADE FOR YOUR NEXT POST</span><p>9:16 <small>vertical</small></p><i></i><p>1080p <small>export</small></p><i></i><p>30 / 60 <small>fps</small></p><i></i><p>Your sound. <small>Your style.</small></p></div>
+  <section class="library wrap" id="animations" aria-labelledby="library-heading">
+   <div class="section-top"><div><p class="eyebrow">THE ANIMATION LIBRARY</p><h2 id="library-heading">Find your kind of satisfying.</h2></div><p class="section-aside">Start with a bounce.<br> More ways to create are on the way.</p></div>
+   <div class="library-toolbar"><div class="filters" role="group" aria-label="Filter animations"><button class="filter active" data-filter="all" aria-pressed="true">All animations <span>4</span></button><button class="filter" data-filter="available" aria-pressed="false">Available now <span>1</span></button><button class="filter" data-filter="planned" aria-pressed="false">Coming next <span>3</span></button></div><span id="library-count" class="library-count" role="status" aria-live="polite">1 ready to create · 3 on the horizon</span></div>
+   <div class="animation-grid" id="animation-grid"></div>
+   <noscript><p class="no-script">Start creating with <a href="./studio.html?animation=ring-escape">Ring Escape →</a>. Enable JavaScript to see the full animation library.</p></noscript>
+   <p class="library-note"><span class="tiny-spark" aria-hidden="true">✳</span> A growing collection. We’re adding new animations, one at a time.</p>
+  </section>
+  <section class="workflow" id="how-it-works" aria-labelledby="workflow-heading"><div class="wrap">
+   <div class="section-top"><div><p class="eyebrow">FROM AN IDEA TO YOUR FEED</p><h2 id="workflow-heading">Less editing. More creating.</h2></div><a class="text-link" href="./studio.html?animation=ring-escape">Let’s make something <span aria-hidden="true">↗</span></a></div>
+   <div class="steps"><article><span class="step-number">01</span><h3>Pick your playground.</h3><p>Choose an animation from the library. Ring Escape is ready for your first idea.</p></article><article><span class="step-number">02</span><h3>Find your own rhythm.</h3><p>Make it yours with colors, motion, text, and sounds that follow the action.</p></article><article><span class="step-number">03</span><h3>Make it a video.</h3><p>Export a vertical MP4 or WebM, ready for your next Short, Reel, or TikTok.</p></article></div>
+  </div></section>
+  <section class="questions wrap" id="questions" aria-labelledby="questions-heading"><div class="questions-intro"><p class="eyebrow">A FEW THINGS TO KNOW</p><h2 id="questions-heading">Good questions.<br>Simple answers.</h2><p>You bring the idea.<br>Orbit brings the bounce.</p></div><div class="faq-list">
+   <details><summary>Which animations can I use right now?<span aria-hidden="true">+</span></summary><p>Ring Escape is ready to use. The other cards are concepts for future animations, and are clearly marked “Coming later.” We’ll add them one by one.</p></details>
+   <details><summary>Can I use my own music and sounds?<span aria-hidden="true">+</span></summary><p>Yes. In the editor, upload a bounce sound or a background track, choose a built-in melody, or import MIDI notes. Bounce sounds and melody notes follow the animation’s collision timing.</p></details>
+   <details><summary>What can I export?<span aria-hidden="true">+</span></summary><p>Create vertical 9:16 videos at 720p or 1080p, with 30 or 60 frames per second. Choose MP4 or WebM, with audio or without. The editor also saves still images.</p></details>
+   <details><summary>Will my settings be saved?<span aria-hidden="true">+</span></summary><p>Your current setup and saved presets stay in this browser, along with uploaded sounds. You can also download your settings as a project file from the editor.</p></details>
+  </div></section>
+  <section class="last-call wrap"><div><p class="eyebrow">ONE BALL. YOUR NEXT IDEA.</p><h2>See where the bounce takes you.</h2></div><a class="button primary large" href="./studio.html?animation=ring-escape">Create with Ring Escape <span aria-hidden="true">↗</span></a><svg class="last-orbit" viewBox="0 0 300 160" fill="none" aria-hidden="true"><ellipse cx="150" cy="80" rx="140" ry="60" transform="rotate(-20 150 80)" stroke="currentColor"/><ellipse cx="150" cy="80" rx="120" ry="45" transform="rotate(-20 150 80)" stroke="currentColor"/><circle cx="260" cy="19" r="8" fill="currentColor"/></svg></section>
+ </main>
+ <footer class="site-footer wrap"><a class="brand" href="./" aria-label="Orbit Studio home"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 23a12 12 0 1 1 2-11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="22" cy="10" r="4" fill="currentColor"/></svg><span>orbit<span class="brand-light">studio</span></span></a><p>A little motion. A lot of possibility.</p><nav aria-label="Footer navigation"><a href="#animations">Animations</a><a href="./studio.html?animation=ring-escape">Open studio ↗</a></nav></footer>
+ <script type="module" src="./home.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "orbit-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8766 --bind 127.0.0.1",
+    "test": "node --test tests/simulation.test.js tests/studio.test.js tests/catalog.test.js"
+  }
+}
