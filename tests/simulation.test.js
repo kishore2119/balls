@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Simulation, STEP, BALL_SPEED } from '../simulation.js';
+import { Simulation, STEP, BALL_SPEED } from '../src/animation/simulation.js';
 
 const snapshot = simulation => JSON.stringify({
   tick: simulation.tick, ball: simulation.ball, rings: simulation.rings,

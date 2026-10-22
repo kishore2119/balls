@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0b12"><meta name="description" content="Create musical ring-escape videos. Customize motion, sound, and style, then export a vertical video on your device."><link rel="icon" href="data:,"><title>Ring Escape Editor — Orbit Studio</title>
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./src/studio/styles.css">
 <script type="importmap">{"imports":{"mediabunny":"./vendor/mediabunny/mediabunny.min.mjs"}}</script>
 </head>
 <body>
@@ -71,7 +71,7 @@
 <dialog id="help-dialog"><div class="dialog-heading"><h2>From bounce to finished video.</h2><button class="icon-button" data-close="help-dialog" aria-label="Close guide"><span data-icon="close"></span></button></div><ol class="guide-list"><li><b>Make it yours.</b><p>Choose colors, edit your title, and tune the physics. Replay uses the same scenario; New scenario gives you a new starting seed.</p></li><li><b>Give it a soundtrack.</b><p>Enable preview audio, pick a melody or import MIDI. Each bounce plays the next note. Upload a short impact sound or a background track for your own style.</p></li><li><b>Export the whole thing.</b><p>Choose the duration, frame rate, and format. Orbit draws every frame and syncs sound to the same collision timestamps.</p></li></ol><p class="muted small">Presets and uploaded sounds are stored in this browser. Save a project JSON to keep a separate copy of your settings.</p></dialog>
 <input type="file" id="midi-file" accept=".mid,.midi" hidden><input type="file" id="impact-file" accept="audio/*" hidden><input type="file" id="bed-file" accept="audio/*" hidden><input type="file" id="project-file" accept=".json,application/json" hidden>
 <div id="toast" role="status" hidden></div><div id="fatal-error" role="alert" hidden></div>
-<script type="module">import('./studio.js').catch(error=>{console.error(error);const el=document.querySelector('#fatal-error');el.textContent=location.protocol==='file:'?'Open Orbit through a local web server to load the studio.':`Orbit could not start: ${error.message}`;el.hidden=false;});</script>
+<script type="module">import('./src/studio/studio.js').catch(error=>{console.error(error);const el=document.querySelector('#fatal-error');el.textContent=location.protocol==='file:'?'Open Orbit through a local web server to load the studio.':`Orbit could not start: ${error.message}`;el.hidden=false;});</script>
 </body>
 </html>
 

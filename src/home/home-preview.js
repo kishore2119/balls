@@ -1,6 +1,6 @@
-import {Simulation} from './simulation.js';
-import {OrbitRenderer} from './renderer.js';
-import {createProject,THEMES} from './config.js';
+import {Simulation} from '../animation/simulation.js';
+import {OrbitRenderer} from '../animation/renderer.js';
+import {createProject,THEMES} from '../config.js';
 export function startDemo(canvas,onStatus){
  canvas.hidden=false;
  const project=createProject(),simulation=new Simulation(project.seed,{...project.physics,ringCount:28,ballRadius:28,ballSpeed:.65,shrinkSpeed:1.5}),renderer=new OrbitRenderer(canvas);

@@ -1,6 +1,6 @@
-import {Output,BufferTarget,CanvasSource,AudioBufferSource,Mp4OutputFormat,WebMOutputFormat,Quality,canEncodeVideo,canEncodeAudio} from './vendor/mediabunny/mediabunny.min.mjs';
+import {Output,BufferTarget,CanvasSource,AudioBufferSource,Mp4OutputFormat,WebMOutputFormat,Quality,canEncodeVideo,canEncodeAudio} from '../../vendor/mediabunny/mediabunny.min.mjs';
 let aacReady;
-async function ensureAac(){if(await canEncodeAudio('aac'))return;aacReady??=import('./vendor/aac-encoder/mediabunny-aac-encoder.min.mjs').then(module=>module.registerAacEncoder());await aacReady;}
+async function ensureAac(){if(await canEncodeAudio('aac'))return;aacReady??=import('../../vendor/aac-encoder/mediabunny-aac-encoder.min.mjs').then(module=>module.registerAacEncoder());await aacReady;}
 const abortError=()=>new DOMException('Export cancelled.','AbortError');
 export async function encodeVideo({canvas,renderAt,audio,format='mp4',fps=30,duration=45,resolution=1080,signal,onProgress=()=>{}}){
  if(![30,60].includes(fps)||!Number.isFinite(duration)||duration<=0||duration>120)throw new Error('Choose 30 or 60 fps and a duration up to 120 seconds.');

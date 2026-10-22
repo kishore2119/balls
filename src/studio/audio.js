@@ -1,4 +1,4 @@
-import {seededRandom} from './simulation.js';
+import {seededRandom} from '../animation/simulation.js';
 export const MELODIES={
  pentatonic:{name:'Orbit steps',notes:[60,64,67,69,72,69,67,64,62,65,69,72,74,72,69,65]},
  twinkle:{name:'Twinkle, Twinkle',notes:[60,60,67,67,69,69,67,65,65,64,64,62,62,60]},

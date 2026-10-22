@@ -1,4 +1,4 @@
-import {sanitizeProject} from './config.js';
+import {sanitizeProject} from '../config.js';
 const KEY='orbit-studio-current-v2',PRESETS='orbit-studio-presets-v2';
 export function loadCurrent(){try{const raw=localStorage.getItem(KEY);return raw?sanitizeProject(JSON.parse(raw)):null;}catch{return null;}}
 export function saveCurrent(project){localStorage.setItem(KEY,JSON.stringify(project));}

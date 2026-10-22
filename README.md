@@ -14,7 +14,7 @@ Open http://127.0.0.1:8766/ for the home page. Choose Ring Escape to open the ed
 
 The home page introduces Orbit Studio with a live Ring Escape demo, selectable demo colors, animation filters, a creation guide, and common questions. Only Ring Escape is available; the other cards are clearly labeled concept previews.
 
-`animations.js` is the animation catalog. Add an entry with a unique ID, name, artwork, category, description, and status. Mark a mode `available` and give it an `href` only after its editor works. Planned modes do not link to the Ring Escape editor. Home preview colors never overwrite saved editor settings.
+`src/home/animations.js` is the animation catalog. Add an entry with a unique ID, name, artwork, category, description, and status. Mark a mode `available` and give it an `href` only after its editor works. Planned modes do not link to the Ring Escape editor. Home preview colors never overwrite saved editor settings.
 
 The original editor lives in `studio.html`; its controls, audio, local presets, and exports use the existing modules. The logo and Animations link return to the home page.
 
@@ -59,19 +59,23 @@ Run `npm test` with Node.js installed. The tests cover deterministic physics, co
 
 Browser verification pages in work/ check actual MP4/AAC and WebM/Opus tracks, durations, frame counts, audible output, cancellation, 1080×1920 output, and custom audio storage/mixing. In the development check, the first decoded MP4 sound appeared about 6.2 ms after its collision event (below one video frame at 30 or 60 fps). This measures the tested file, not a guarantee for every imported recording or device.
 
-## Files and libraries
+## Project structure
 
-- `studio.js`: project state, controls, preview synchronization, local library, export UI.
-- `simulation.js`: deterministic ring physics and collision events.
-- `renderer.js`: the configurable Three.js renderer.
-- `audio.js`: note mapping, instruments, samples, background track, offline audio, preview clock.
-- `midi.js`: MIDI format 0/1 note and tempo parser.
-- `exporter.js`: WebCodecs exports through Mediabunny.
-- `scenario.worker.js`: background candidate search.
-- `storage.js`: local project and audio persistence.
-- `config.js`: defaults, limits, and project validation.
-- `ui.js`, `index.html`, `styles.css`: responsive interface.
+```text
+index.html                 Home page
+studio.html                Ring Escape editor
+src/
+  config.js                Shared defaults and project validation
+  home/                    Library, landing-page code, live demo, and home.css
+  studio/                  Editor, audio, MIDI, storage, export, and styles.css
+  animation/               Ring physics, rendering, palette, and scenario worker
+tests/                     Automated checks
+vendor/                    Required bundled libraries and their licenses
+work/                      Ignored local downloads, backups, and browser checks
+```
 
-Third-party libraries are bundled locally with their license files: Three.js 0.186.1 (MIT), Mediabunny 1.62.0 (MPL-2.0), and @mediabunny/aac-encoder 1.62.0 (MPL-2.0; includes an FFmpeg AAC build). Upstream sources: https://threejs.org/ and https://github.com/Vanilagy/mediabunny. The original minimal app is backed up under work/before-studio/.
+Styles stay alongside the page code they belong to. Both HTML entry pages remain at the root, so existing browser addresses and saved projects keep working. Worker URLs resolve relative to their module, allowing the app to run from a subdirectory as well as the server root.
 
+The unused original `animation.js` and `recording.js` prototypes are preserved locally as `work/animation.legacy.js` and `work/recording.legacy.js`. They are excluded from Git by the existing work-folder rule. The earlier app snapshot remains in `work/before-studio/`.
 
+Third-party libraries are bundled locally with their license files: Three.js 0.186.1 (MIT), Mediabunny 1.62.0 (MPL-2.0), and @mediabunny/aac-encoder 1.62.0 (MPL-2.0; includes an FFmpeg AAC build). Upstream sources: https://threejs.org/ and https://github.com/Vanilagy/mediabunny.

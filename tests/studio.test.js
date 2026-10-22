@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Simulation,collectEvents,STEP} from '../simulation.js';
-import {createProject,sanitizeProject} from '../config.js';
-import {noteEvents} from '../audio.js';
-import {parseMidi} from '../midi.js';
-import {PlaybackClock} from '../playback-clock.js';
-import {ringColor,segmentCounts,resizePalette} from '../palette.js';
+import {Simulation,collectEvents,STEP} from '../src/animation/simulation.js';
+import {createProject,sanitizeProject} from '../src/config.js';
+import {noteEvents} from '../src/studio/audio.js';
+import {parseMidi} from '../src/studio/midi.js';
+import {PlaybackClock} from '../src/studio/playback-clock.js';
+import {ringColor,segmentCounts,resizePalette} from '../src/animation/palette.js';
 
 test('preview audio clock and export agree at every sampled timestamp',()=>{
  for(const fps of [30,60,144]){

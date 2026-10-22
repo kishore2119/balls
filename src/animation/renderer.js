@@ -1,4 +1,4 @@
-import * as THREE from './vendor/three.module.js';
+import * as THREE from '../../vendor/three.module.js';
 import {WIDTH,HEIGHT,TAU} from './simulation.js';
 import {ringColor} from './palette.js';
 function texture(width,height){const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;map.generateMipmaps=false;map.minFilter=THREE.LinearFilter;map.magFilter=THREE.LinearFilter;return {canvas,context:canvas.getContext('2d'),map};}
