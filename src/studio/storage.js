@@ -1,11 +1,14 @@
-import {sanitizeProject} from '../config.js';
+import {ANIMATION_MODES,sanitizeProject} from '../config.js';
 const KEY='orbit-studio-current-v2',PRESETS='orbit-studio-presets-v2';
-export function loadCurrent(){try{const raw=localStorage.getItem(KEY);return raw?sanitizeProject(JSON.parse(raw)):null;}catch{return null;}}
-export function saveCurrent(project){localStorage.setItem(KEY,JSON.stringify(project));}
-export function presets(){try{const data=JSON.parse(localStorage.getItem(PRESETS)||'[]');return Array.isArray(data)?data:[];}catch{return[];}}
+const currentKey=mode=>mode==='circle-royale'?'orbit-studio-current-circle-royale-v1':mode==='spike-melody'?'orbit-studio-current-spike-melody-v1':mode==='ball-multiplier'?'orbit-studio-current-ball-multiplier-v1':mode==='timed-escape'?'orbit-studio-current-timed-escape-v1':mode==='rainbow-crash'?'orbit-studio-current-rainbow-crash-v1':mode==='string-wars'?'orbit-studio-current-string-wars-v1':mode==='growing-ball'?'orbit-studio-current-growing-ball-v1':KEY;
+export function loadCurrent(mode='ring-escape'){try{const raw=localStorage.getItem(currentKey(mode));const project=raw?sanitizeProject(JSON.parse(raw)):null;return project?.animation===mode?project:null;}catch{return null;}}
+export function saveCurrent(project){localStorage.setItem(currentKey(project.animation),JSON.stringify(project));localStorage.setItem('orbit-studio-last-animation',project.animation||'ring-escape');}
+export function presets(){try{const data=JSON.parse(localStorage.getItem(PRESETS)||'[]');if(!Array.isArray(data))return [];return data.slice(0,40).flatMap(entry=>{try{if(!entry||typeof entry.id!=='string'||typeof entry.name!=='string'||!entry.project)return [];return [{...entry,project:sanitizeProject(entry.project)}];}catch{return [];}});}catch{return[];}}
 export function savePreset(project,name){const list=presets(),entry={id:crypto.randomUUID(),name:name.trim().slice(0,80)||'My escape',savedAt:Date.now(),project:structuredClone(project)};list.unshift(entry);localStorage.setItem(PRESETS,JSON.stringify(list.slice(0,40)));return entry;}
 export function deletePreset(id){localStorage.setItem(PRESETS,JSON.stringify(presets().filter(item=>item.id!==id)));}
 let database;
 function open(){return database??=new Promise((resolve,reject)=>{const request=indexedDB.open('orbit-studio-assets',1);request.onupgradeneeded=()=>request.result.createObjectStore('assets',{keyPath:'id'});request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});}
 export async function putAsset(file,kind){const db=await open(),asset={id:crypto.randomUUID(),name:file.name,kind,blob:file,createdAt:Date.now()};await new Promise((resolve,reject)=>{const tx=db.transaction('assets','readwrite');tx.objectStore('assets').put(asset);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});return asset;}
 export async function getAsset(id){if(!id)return null;const db=await open();return new Promise((resolve,reject)=>{const request=db.transaction('assets').objectStore('assets').get(id);request.onsuccess=()=>resolve(request.result||null);request.onerror=()=>reject(request.error);});}
+
+export function lastAnimation(){try{const mode=localStorage.getItem('orbit-studio-last-animation');return ANIMATION_MODES.includes(mode)?mode:'ring-escape';}catch{return 'ring-escape';}}

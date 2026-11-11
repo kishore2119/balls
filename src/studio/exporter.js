@@ -1,8 +1,10 @@
+import {abortable,abortError} from './async.js';
 import {Output,BufferTarget,CanvasSource,AudioBufferSource,Mp4OutputFormat,WebMOutputFormat,Quality,canEncodeVideo,canEncodeAudio} from '../../vendor/mediabunny/mediabunny.min.mjs';
 let aacReady;
 async function ensureAac(){if(await canEncodeAudio('aac'))return;aacReady??=import('../../vendor/aac-encoder/mediabunny-aac-encoder.min.mjs').then(module=>module.registerAacEncoder());await aacReady;}
-const abortError=()=>new DOMException('Export cancelled.','AbortError');
 export async function encodeVideo({canvas,renderAt,audio,format='mp4',fps=30,duration=45,resolution=1080,signal,onProgress=()=>{}}){
+ if(signal?.aborted)throw abortError();
+ if(!['mp4','webm'].includes(format))throw new Error('Choose MP4 or WebM.');
  if(![30,60].includes(fps)||!Number.isFinite(duration)||duration<=0||duration>120)throw new Error('Choose 30 or 60 fps and a duration up to 120 seconds.');
  const width=resolution===720?720:1080,height=width*16/9;let videoCodec;
  if(format==='mp4'){
@@ -16,14 +18,13 @@ export async function encodeVideo({canvas,renderAt,audio,format='mp4',fps=30,dur
  let sound;if(audio){sound=new AudioBufferSource({codec:format==='mp4'?'aac':'opus',quality:new Quality('high')});output.addAudioTrack(sound);}
  const cancel=()=>{output.cancel().catch(()=>{});};signal?.addEventListener('abort',cancel,{once:true});
  try{
-  await output.start();if(audio){onProgress(.02,'Encoding synchronized audio');await sound.add(audio);sound.close();}
+  await abortable(output.start(),signal);
+  const audioTask=audio?sound.add(audio):Promise.resolve();audioTask.catch(()=>{});
   const count=Math.round(duration*fps);let lastYield=performance.now();
   for(let frame=0;frame<count;frame++){
-   if(signal?.aborted)throw abortError();renderAt(frame/fps);context.drawImage(canvas,0,0,width,height);await video.add(frame/fps,1/fps);onProgress(.05+(frame+1)/count*.91,`Rendering frame ${frame+1} of ${count}`);
+   if(signal?.aborted)throw abortError();renderAt(frame/fps);context.drawImage(canvas,0,0,width,height);await abortable(video.add(frame/fps,1/fps),signal);onProgress(.05+(frame+1)/count*.91,`Rendering frame ${frame+1} of ${count}`);
    if(performance.now()-lastYield>18){await new Promise(resolve=>setTimeout(resolve,0));lastYield=performance.now();}
   }
-  video.close();onProgress(.98,'Finalizing your video');await output.finalize();if(signal?.aborted)throw abortError();const blob=new Blob([target.buffer],{type:format==='mp4'?'video/mp4':'video/webm'});if(!blob.size)throw new Error('The browser returned an empty video.');onProgress(1,'Ready to download');return {blob,frames:count,width,height,format};
- }catch(error){try{await output.cancel();}catch{}if(signal?.aborted)throw abortError();throw error;}finally{signal?.removeEventListener('abort',cancel);}
+  await abortable(audioTask,signal);onProgress(.98,'Finalizing your video');await abortable(output.finalize(),signal);if(signal?.aborted)throw abortError();const blob=new Blob([target.buffer],{type:format==='mp4'?'video/mp4':'video/webm'});if(!blob.size)throw new Error('The browser returned an empty video.');onProgress(1,'Ready to download');return {blob,frames:count,width,height,format};
+ }catch(error){output.cancel().catch(()=>{});if(signal?.aborted)throw abortError();throw error;}finally{signal?.removeEventListener('abort',cancel);}
 }
-
-

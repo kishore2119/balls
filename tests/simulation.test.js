@@ -88,6 +88,7 @@ test('ball keeps the selected speed on every tick for the full video', () => {
     { ballSpeed: 3, gravity: 500, bounciness: 1.08, shrinkSpeed: 4 },
   ]) {
     const s = new Simulation(1810087800, settings, { effects: false });
+    Object.assign(s.ball, { x: -s.rings[0].radius + s.ball.radius + 4, y: 0, vx: -BALL_SPEED, vy: 0 });
     for (let tick = 0; tick < 120 / STEP; tick++) {
       const before = { ...s.ball }, events = s.events.length;
       s.step();

@@ -24,4 +24,3 @@ export function parseMidi(arrayBuffer){
  const result=notes.filter(note=>note.velocity>0).sort((a,b)=>a.tick-b.tick||a.midi-b.midi).slice(0,2000).map(note=>({midi:note.midi,duration:Math.max(.08,Math.min(2,seconds(note.end)-seconds(note.tick)))}));
  if(!result.length)throw new Error('No musical notes were found in this MIDI file.');return result;
 }
-

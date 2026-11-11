@@ -1,77 +1,20 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0b12"><meta name="description" content="Create musical ring-escape videos. Customize motion, sound, and style, then export a vertical video on your device."><link rel="icon" href="data:,"><title>Ring Escape Editor — Orbit Studio</title>
-<link rel="stylesheet" href="./src/studio/styles.css">
-<script type="importmap">{"imports":{"mediabunny":"./vendor/mediabunny/mediabunny.min.mjs"}}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#242521">
+  <meta name="description" content="Customize a physics animation, sync sounds to collisions, and export a vertical video in Orbit Studio.">
+  <title>Orbit Studio editor</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./src/typography.css">
+  <link rel="stylesheet" href="./src/studio/styles.css">
+  <link rel="stylesheet" href="./src/privacy/privacy.css">
 </head>
-<body>
-<header class="topbar">
- <a class="brand" href="./" aria-label="Orbit Studio home"><span class="brand-mark"><svg viewBox="0 0 32 32" fill="none"><path d="M25 23a12 12 0 1 1 2-11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="22" cy="10" r="4" fill="currentColor"/></svg></span><strong>orbit<span>studio</span></strong></a>
- <a class="studio-back" href="./#animations" aria-label="Back to animations"><span aria-hidden="true">←</span><span class="back-label">Animations</span></a>
- <div class="project-meta"><input id="project-name" aria-label="Project name" value="Untitled escape" maxlength="80"><span id="save-state"><i></i> Saved on this device</span></div>
- <div class="header-actions"><button class="button ghost" id="help-button"><span data-icon="help"></span><span class="optional">Quick guide</span></button><button class="button secondary" id="save-button"><span data-icon="bookmark"></span><span class="optional">Save preset</span></button><button class="button primary" id="header-export"><span data-icon="download"></span>Export video</button></div>
-</header>
-<div class="workspace">
- <aside class="editor" aria-label="Video editor">
-  <div class="mode-card"><div class="mode-art" aria-hidden="true"><i></i><b></b></div><div><span class="eyebrow">YOUR CANVAS, YOUR RULES</span><h1>Ring escape</h1><p>One ball. A thousand possibilities.</p></div><span class="mode-number">01</span></div>
-  <nav class="tabs" aria-label="Editor sections" role="tablist"><button role="tab" aria-selected="true" data-tab="scene">Scene</button><button role="tab" aria-selected="false" data-tab="motion">Motion</button><button role="tab" aria-selected="false" data-tab="audio">Audio</button><button role="tab" aria-selected="false" data-tab="saved">Saved</button></nav>
-  <div class="panel-scroll">
-   <section data-panel="scene" role="tabpanel" aria-label="Scene settings">
-    <div class="section-heading">COLOR STORY <span>Make it yours</span></div><div id="theme-grid" class="theme-grid"></div>
-    <div class="range-field palette-count"><label for="color-count"><span>Number of colors</span><output id="color-count-label" for="color-count">2</output></label><input id="color-count" type="range" min="1" max="12" step="1" aria-label="Number of colors"></div>
-    <div id="palette-colors" class="palette-colors"></div><label class="toggle palette-gradient"><span>Blend colors into a gradient</span><input id="palette-gradient" type="checkbox" aria-label="Blend colors into a gradient"></label><p id="palette-description" class="setting-hint"></p>
-    <div class="color-row"><label>Background<input type="color" data-setting="appearance.background" aria-label="Background color"></label><label>Ball<input type="color" data-setting="appearance.ballColor" aria-label="Ball color"></label></div>
-    <div class="divider"></div><div class="section-heading">WORDS ON SCREEN</div>
-    <label class="field-label" for="video-title">Video title</label><textarea id="video-title" data-setting="appearance.title" maxlength="160" rows="3"></textarea><label class="field-label" for="handle">Your handle</label><input id="handle" type="text" data-setting="appearance.handle" placeholder="@yourname" maxlength="50">
-    <div id="scene-toggles" class="toggle-stack"></div><div class="divider"></div><div class="section-heading">FINISHING TOUCHES</div><div id="scene-ranges"></div>
-   </section>
-   <section data-panel="motion" role="tabpanel" aria-label="Motion settings" hidden>
-    <div class="section-heading">THE PHYSICS <span>Updates live</span></div><div id="motion-ranges"></div><p id="shrink-hint" class="setting-hint"></p>
-    <label class="field-label" for="direction">Ring direction</label><select id="direction" data-setting="physics.direction"><option value="1">Clockwise</option><option value="-1">Counterclockwise</option></select><div id="motion-toggles" class="toggle-stack"></div>
-    <div class="notice"><span data-icon="sparkles"></span><p>Ball speed stays constant. Gravity and bounce response change its direction. Motion edits replay the scenario to keep sound in sync.</p></div>
-   </section>
-   <section data-panel="audio" role="tabpanel" aria-label="Audio settings" hidden>
-    <div class="section-heading">MAKE EVERY BOUNCE A NOTE</div><div id="audio-toggles" class="toggle-stack"></div>
-    <label class="field-label" for="melody">Melody</label><select id="melody" data-setting="sound.melody"><option value="pentatonic">Orbit steps · original</option><option value="twinkle">Twinkle, Twinkle · traditional</option><option value="ode">Ode to Joy · Beethoven</option><option value="none">No melody</option><option value="midi">Imported MIDI</option></select>
-    <button class="button upload full" id="import-midi"><span data-icon="upload"></span>Import a MIDI melody</button><small id="midi-name" class="file-caption">Each collision plays the next note.</small>
-    <div class="two-fields"><div><label class="field-label" for="instrument">Instrument</label><select id="instrument" data-setting="sound.instrument"><option value="marimba">Marimba</option><option value="piano">Soft piano</option><option value="musicbox">Music box</option><option value="chip">Chiptune</option></select></div><div><label class="field-label" for="trigger">Play notes on</label><select id="trigger" data-setting="sound.trigger"><option value="bounce">Bounces</option><option value="escape">Ring escapes</option><option value="both">Both</option></select></div></div>
-    <div class="divider"></div><div class="section-heading">IMPACT & TEXTURE</div>
-    <label class="field-label" for="impact">Bounce sound</label><select id="impact" data-setting="sound.impact"><option value="soft">Soft tick</option><option value="wood">Wood block</option><option value="click">Click</option><option value="sample">My uploaded sound</option><option value="none">None</option></select>
-    <button class="button upload full" id="import-impact"><span data-icon="upload"></span>Upload bounce sound</button><small id="impact-name" class="file-caption">MP3, WAV, OGG or M4A · up to 20 MB</small>
-    <label class="field-label" for="break-sound">Ring escape sound</label><select id="break-sound" data-setting="sound.breakSound"><option value="shimmer">Shimmer</option><option value="pop">Soft burst</option><option value="none">None</option></select>
-    <div class="divider"></div><div class="section-heading">BACKGROUND TRACK</div><button class="button upload full" id="import-bed"><span data-icon="music"></span>Add background audio</button><div class="asset-caption"><small id="bed-name" class="file-caption">Starts with your video and loops to fit.</small><button class="text-button" id="remove-bed" hidden>Remove</button></div>
-    <div class="divider"></div><div class="section-heading">THE MIX</div><div id="audio-ranges"></div>
-   </section>
-   <section data-panel="saved" role="tabpanel" aria-label="Saved presets" hidden><div class="section-heading">YOUR PRESETS <span>On this device</span></div><div id="preset-list"></div><div class="divider"></div><div class="section-heading">PROJECT FILE</div><p class="muted small">Keep a copy of your settings or bring a project back into Orbit.</p><button class="button secondary full" id="download-project"><span data-icon="download"></span>Download project JSON</button><button class="button upload full" id="import-project"><span data-icon="upload"></span>Open project JSON</button><p class="muted tiny">Uploaded audio stays in this browser. Project files contain settings and MIDI notes.</p></section>
-  </div>
-
- </aside>
- <main class="viewport">
-  <div class="preview-header"><div><span class="eyebrow">LIVE PREVIEW</span><span class="preview-label">Your next satisfying video</span></div><button class="icon-button" id="fullscreen" aria-label="Fullscreen preview" title="Fullscreen"><span data-icon="expand"></span></button></div>
-  <div class="preview-stage"><div class="artboard" id="artboard"><canvas id="animation" width="1080" height="1920" aria-label="Live ring escape animation"></canvas><div class="safe-guide" id="safe-guide" hidden><span>Keep key moments inside this area</span></div><div id="loading-overlay" class="loading-overlay" hidden><div class="spinner"></div><span>Syncing your soundtrack…</span></div></div><span class="format-label">9:16 &nbsp;·&nbsp; VERTICAL VIDEO</span></div>
-  <div class="preview-controls"><button class="icon-button play-button" id="play-preview" aria-label="Pause preview"><span data-icon="pause"></span></button><button class="icon-button" id="replay" aria-label="Replay scenario" title="Replay"><span data-icon="replay"></span></button><button class="sound-button" id="monitor"><span data-icon="volume"></span><span id="monitor-label">Enable audio</span></button><label class="guide-control"><input type="checkbox" id="safe-toggle">Safe zones</label><button class="icon-button" id="snapshot" aria-label="Save a still image" title="Save a still"><span data-icon="camera"></span></button></div>
-  <div class="timeline-row"><span id="time-label">00:00</span><input type="range" min="0" max="45" step="0.1" value="0" id="timeline" aria-label="Preview position"><span id="duration-label">00:45</span></div>
-  <div class="scenario-bar"><span id="seed-label">SCENARIO #48291</span><div><button class="text-button" id="find-ending" title="Search for a scenario that ends near the selected duration"><span data-icon="sparkles"></span>Find an ending</button><button class="button secondary compact" id="new-scenario"><span data-icon="shuffle"></span>New scenario</button></div></div>
- </main>
- <aside class="output" id="output-panel" aria-label="Export settings">
-  <div class="output-heading"><span class="eyebrow">FROM CANVAS TO CONTENT</span><h2>Ready for the feed.</h2><p>Your animation. Your soundtrack.<br>One video, ready to share.</p></div>
-  <label class="field-label" for="duration">Video duration</label><select id="duration" data-setting="export.duration"><option value="5">5 seconds · quick test</option><option value="15">15 seconds</option><option value="30">30 seconds</option><option value="45">45 seconds</option><option value="60">60 seconds</option><option value="75">75 seconds</option><option value="120">120 seconds</option></select>
-  <div class="two-fields"><div><label class="field-label" for="fps">Frame rate</label><select id="fps" data-setting="export.fps"><option value="30">30 fps</option><option value="60">60 fps</option></select></div><div><label class="field-label" for="resolution">Resolution</label><select id="resolution" data-setting="export.resolution"><option value="1080">1080p</option><option value="720">720p</option></select></div></div>
-  <label class="field-label" for="format">File format</label><select id="format" data-setting="export.format"><option value="mp4">MP4 · H.264 + AAC</option><option value="webm">WebM · VP9 + Opus</option></select>
-  <div class="export-summary"><div><span data-icon="video"></span><span id="export-pixels">1080 × 1920</span><span class="small-pill">9:16</span></div><div><span data-icon="music"></span><span id="audio-summary">Synchronized audio included</span></div><div><span data-icon="check"></span><span>No watermark</span></div></div>
-  <button class="button primary full large" id="render-button"><span data-icon="download"></span><span id="render-label">Export video</span><span class="button-arrow">↗</span></button><p class="export-note">Rendered frame by frame in your browser.<br>Your files stay on your device.</p>
-  <div class="divider"></div><div class="section-heading">RECENT EXPORTS <span>This session</span></div><div id="export-list"><div class="empty-state"><span data-icon="film"></span><p>A little empty, for now.</p><small>Your finished videos will appear here.</small></div></div>
- </aside>
-</div>
-<dialog id="save-dialog"><form method="dialog" id="save-form"><div class="dialog-heading"><h2>Save your recipe.</h2><button class="icon-button" value="cancel" aria-label="Close save dialog" formnovalidate><span data-icon="close"></span></button></div><p class="muted">Colors, motion, sound, and export settings—ready for next time.</p><label class="field-label" for="preset-name">Preset name</label><input id="preset-name" maxlength="80" required><div class="dialog-actions"><button class="button secondary" value="cancel" formnovalidate>Cancel</button><button class="button primary" value="save">Save preset</button></div></form></dialog>
-<dialog id="export-settings-dialog"><div class="dialog-heading"><h2>Export your video</h2><button class="icon-button" data-close="export-settings-dialog" aria-label="Close export settings"><span data-icon="close"></span></button></div><div id="mobile-export-body"></div></dialog>
-<dialog id="render-dialog"><div class="render-visual"><div class="render-orbit"></div><span data-icon="sparkles"></span></div><span class="eyebrow">MAKING SOMETHING SATISFYING</span><h2 id="render-title">Rendering your video</h2><p id="render-stage" class="muted">Preparing the collision timeline…</p><progress id="render-progress" value="0" max="1"></progress><div class="progress-labels"><span id="render-percent">0%</span><span id="render-elapsed">00:00</span></div><p class="tiny muted">Every frame and note is placed on the same timeline.</p><button class="button secondary full" id="cancel-render">Cancel export</button></dialog>
-<dialog id="result-dialog"><div class="dialog-heading"><h2>Your video is ready.</h2><button class="icon-button" data-close="result-dialog" aria-label="Close finished video"><span data-icon="close"></span></button></div><video id="result-video" controls playsinline></video><div class="result-footer"><span id="result-details" class="muted small"></span><a class="button primary" id="result-download" download><span data-icon="download"></span>Download video</a></div></dialog>
-<dialog id="help-dialog"><div class="dialog-heading"><h2>From bounce to finished video.</h2><button class="icon-button" data-close="help-dialog" aria-label="Close guide"><span data-icon="close"></span></button></div><ol class="guide-list"><li><b>Make it yours.</b><p>Choose colors, edit your title, and tune the physics. Replay uses the same scenario; New scenario gives you a new starting seed.</p></li><li><b>Give it a soundtrack.</b><p>Enable preview audio, pick a melody or import MIDI. Each bounce plays the next note. Upload a short impact sound or a background track for your own style.</p></li><li><b>Export the whole thing.</b><p>Choose the duration, frame rate, and format. Orbit draws every frame and syncs sound to the same collision timestamps.</p></li></ol><p class="muted small">Presets and uploaded sounds are stored in this browser. Save a project JSON to keep a separate copy of your settings.</p></dialog>
-<input type="file" id="midi-file" accept=".mid,.midi" hidden><input type="file" id="impact-file" accept="audio/*" hidden><input type="file" id="bed-file" accept="audio/*" hidden><input type="file" id="project-file" accept=".json,application/json" hidden>
-<div id="toast" role="status" hidden></div><div id="fatal-error" role="alert" hidden></div>
-<script type="module">import('./src/studio/studio.js').catch(error=>{console.error(error);const el=document.querySelector('#fatal-error');el.textContent=location.protocol==='file:'?'Open Orbit through a local web server to load the studio.':`Orbit could not start: ${error.message}`;el.hidden=false;});</script>
+<body data-theme="studio" class="studio-loading" aria-busy="true">
+  <div id="studio-boot" class="studio-boot" role="status"><span class="spinner"></span><strong>Opening Orbit Studio</strong></div>
+  <div id="studio-app"></div>
+  <noscript><p>Enable JavaScript to open the Orbit Studio editor.</p></noscript>
+  <script type="module" src="./src/studio/studio-app.jsx"></script>
 </body>
 </html>
-

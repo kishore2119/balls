@@ -5,7 +5,7 @@ export const MELODIES={
  ode:{name:'Ode to Joy',notes:[64,64,65,67,67,65,64,62,60,60,62,64,64,62,62,64,64,65,67,67,65,64,62,60,60,62,64,62,60,60]},
 };
 export const frequency=midi=>440*Math.pow(2,(midi-69)/12);
-export function noteEvents(project,events){let index=0;const s=project.sound;const list=s.melody==='midi'?s.midiNotes:(MELODIES[s.melody]?.notes||[]).map(midi=>({midi,duration:.35}));if(!list.length)return[];return events.filter(event=>s.trigger==='both'||event.type===s.trigger).map(event=>({...event,...list[index++%list.length]}));}
+export function noteEvents(project,events){let index=0;const s=project.sound;const list=s.melody==='midi'?s.midiNotes:(MELODIES[s.melody]?.notes||[]).map(midi=>({midi,duration:.35}));if(!list.length)return[];return events.filter(event=>(event.type==='bounce'||event.type==='escape')&&(s.trigger==='both'||event.type===s.trigger)).map(event=>({...event,...list[index++%list.length]}));}
 function pan(context,bus,x){const p=context.createStereoPanner();p.pan.value=Math.max(-.65,Math.min(.65,x/540*.65));p.connect(bus);return p;}
 function synth(context,bus,time,midi,instrument,volume,duration,x){
  const freq=frequency(midi),voice=context.createGain(),destination=pan(context,bus,x);voice.connect(destination);
@@ -45,4 +45,3 @@ export class PreviewAudio{
  stop(){if(this.source){this.source.onended=null;try{this.source.stop();}catch{}this.source.disconnect();this.source=null;}}
  async decode(blob){const context=new OfflineAudioContext(2,1,48000);return context.decodeAudioData(await blob.arrayBuffer());}
 }
-

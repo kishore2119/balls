@@ -14,15 +14,19 @@ test('animation catalog has unique IDs and only implemented animations have edit
 });
 test('library filters expose the correct available and planned modes',()=>{
  assert.equal(selectAnimations('all').length,ANIMATIONS.length);
- assert.deepEqual(selectAnimations('available').map(mode=>mode.id),['ring-escape']);
+ assert.deepEqual(selectAnimations('available').map(mode=>mode.id),['ring-escape','growing-ball','string-wars','rainbow-crash','timed-escape','ball-multiplier','spike-melody','circle-royale']);
  assert.ok(selectAnimations('planned').every(mode=>mode.status==='planned'));
  assert.equal(selectAnimations('available').length+selectAnimations('planned').length,ANIMATIONS.length);
 });
-test('home links open the separate editor, which retains local project and audio modules',async()=>{
- const home=await readFile(new URL('../index.html',import.meta.url),'utf8'),studio=await readFile(new URL('../studio.html',import.meta.url),'utf8');
- assert.match(home,/src="\.\/src\/home\/home.js"/);assert.match(home,/href="\.\/studio.html\?animation=ring-escape"/);
- assert.match(studio,/import\('\.\/src\/studio\/studio.js'\)/);assert.match(studio,/href="\.\/#animations"/);
- assert.match(studio,/id="impact-file"/);assert.match(studio,/id="preset-list"/);
+test('React entries retain editor links, uploads, and saved presets',async()=>{
+ const root=new URL('../',import.meta.url);
+ const [home,studio,components]=await Promise.all(['index.html','studio.html','src/studio/studio-app.jsx'].map(path=>readFile(new URL(path,root),'utf8')));
+ assert.ok(home.includes('src="./src/home/home.jsx"'));
+ assert.ok(studio.includes('src="./src/studio/studio-app.jsx"'));
+ assert.ok(components.includes("import('./studio.js')")||components.includes('import("./studio.js")'));
+ assert.ok(components.includes('href="./#animations"'));
+ assert.ok(components.includes('id="impact-file"'));
+ assert.ok(components.includes('id="preset-list"'));
 });
 
 async function sourceModules(directory){
@@ -30,7 +34,7 @@ async function sourceModules(directory){
  for(const entry of await readdir(directory,{withFileTypes:true})){
   const target=new URL(entry.name+(entry.isDirectory()?'/':''),directory);
   if(entry.isDirectory())modules.push(...await sourceModules(target));
-  else if(entry.name.endsWith('.js'))modules.push(target);
+  else if(/\.jsx?$/.test(entry.name))modules.push(target);
  }
  return modules;
 }
@@ -41,7 +45,7 @@ test('organized source imports, worker URLs, and page resources resolve to exist
   const paths=[...code.matchAll(/(?:from\s+|import\(\s*|new URL\(\s*)['"](\.[^'"]+)['"]/g)];
   for(const [,path]of paths){await access(new URL(path,file));references++;}
  }
- for(const page of ['index.html','studio.html']){
+ for(const page of ['index.html','studio.html','privacy.html']){
   const file=new URL('../'+page,import.meta.url),html=await readFile(file,'utf8');
   for(const [,path]of html.matchAll(/(?:src|href)="(\.[^"]+)"/g))await access(new URL(path,file));
  }

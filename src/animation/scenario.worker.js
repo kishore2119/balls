@@ -1,3 +1,2 @@
-import {Simulation} from './simulation.js';
-self.onmessage=({data})=>{try{let best=null;for(let i=0;i<96;i++){const seed=(data.seed+Math.imul(i+1,2654435761))>>>0;const s=new Simulation(seed,data.physics,{effects:false});const limit=data.duration+8;while(s.time<limit&&s.escapedAt===null)s.step();const score=s.escapedAt===null?1000+s.remaining:Math.abs(s.escapedAt-(data.duration-2))+(s.escapedAt>data.duration-.5?100:0);if(!best||score<best.score)best={seed,score,escapedAt:s.escapedAt,remaining:s.remaining};self.postMessage({type:'progress',progress:(i+1)/96});if(score<1)break;}self.postMessage({type:'done',...best});}catch(error){self.postMessage({type:'error',message:error.message});}};
-
+import {planScenario} from './scenario.js';
+self.onmessage=({data})=>{try{const result=planScenario(data,progress=>self.postMessage({type:'progress',progress}));self.postMessage({type:'done',...result});}catch(error){self.postMessage({type:'error',message:error.message});}};

@@ -1,81 +1,86 @@
 # Orbit Studio
 
-A complete browser-local creator editor built around the original Three.js ring-escape animation.
+A browser-local video maker for satisfying vertical animations. Choose an animation, customize its motion and appearance, synchronize collision sounds or melodies, and export a video on your device.
 
-## Start
+## Run locally
 
-From this project folder, run:
+With Node.js 22.12 or newer, run from this folder:
 
-    python -m http.server 8766 --bind 127.0.0.1
+    npm ci
+    npm start
 
-Open http://127.0.0.1:8766/ for the home page. Choose Ring Escape to open the editor at http://127.0.0.1:8766/studio.html?animation=ring-escape. The app uses JavaScript modules, so it needs a web server instead of opening index.html directly. No build or dependency installation is required.
+Open http://127.0.0.1:8766/. Run `npm run build` to generate the deployable site in `dist/`, then `npm run preview` to check that build locally. Stop the development server first so the preview can use the same port. The site keeps its existing page URLs and stores projects in the browser.
 
-## Animation library
+## Available animations
 
-The home page introduces Orbit Studio with a live Ring Escape demo, selectable demo colors, animation filters, a creation guide, and common questions. Only Ring Escape is available; the other cards are clearly labeled concept previews.
+- **Ring Escape:** a ball clears shrinking, rotating rings through their gaps. Customize speed, gravity, gaps, ring count, rotation, shrink limits, particle effects, and 1–12 colors with equal bands or gradients. Duration matching plans the ball’s launch and real rebound directions while preserving the selected ring motion.
+- **Growing Ball:** a ball grows after circular-wall bounces. Customize growth, arena size, rainbow colors, trails, and impact rays. Automatic growth fits the circle fill to the chosen duration; manual growth supports free play.
+- **Rainbow Crash:** a ball gets larger and faster on each bounce, leaving a persistent rainbow trail. Adjust growth, speed gain, the trail palette, and the blackout finish. The selected duration clips the natural run.
+- **Circle Royale:** 2–12 named balls compete in an arena with a rotating gate. Escaping eliminates a ball. The last ball inside earns a crown and confetti. Customize the players, icons, motion, gate timing, and sounds.
+- **Spike Melody:** balls stick to the spikes and become bumpers for the next ball. Contacts play notes from a built-in melody or imported MIDI. Customize the gap, spikes, colors, and trail, then see whether a ball escapes.
+- **Ball Multiplier:** a single ball starts a chain reaction. Each escape through the rotating gap spawns a configurable batch near the center. Set the ball limit, rotation, gap, colors, and collision sounds. The selected duration ends the run.
+- **Timed Escape:** each ball gets a configurable time limit to clear the gap. Failed balls freeze as obstacles, and the first successful escape bursts the ring into particles. Restart and New path give the balls new launches.
+- **String Wars:** 2–8 independently moving competitors gain strings on wall bounces and cut opponents’ strings on contact. Customize names, colors, embedded ball icons, string limits, speed, and collisions. Last survivor wins. Optional timed showdown stops replenishment and trims the weakest survivors to finish by 95% of the duration; a natural match may end earlier.
 
-`src/home/animations.js` is the animation catalog. Add an entry with a unique ID, name, artwork, category, description, and status. Mark a mode `available` and give it an `href` only after its editor works. Planned modes do not link to the Ring Escape editor. Home preview colors never overwrite saved editor settings.
+Each animation has its own current-project save. The home page lists only implemented animations.
 
-The original editor lives in `studio.html`; its controls, audio, local presets, and exports use the existing modules. The logo and Animations link return to the home page.
+## Editing and sound
 
-## Create a video
+Style, Motion, Audio, and Presets organize the controls. Sliders also accept exact numbers. Opening an animation, restarting, changing ball speed, and each new preview loop generate a fresh random path. Pause/play resumes the current run. The same recorded randomness drives seeking, audio, and video export. Undo/redo retains 50 settings changes. On phones the live preview stays above a scrolling controls panel.
 
-1. **Scene:** choose a color theme or edit individual colors, add a title and handle, and adjust the counter, trail, particles, glow, and ring thickness.
-2. **Motion:** control ball speed and size, ring rotation speed and direction, shrink speed, ring count, gap width, gravity, bounce response, and rotation reversal on escape. Motion edits replay the same seed to keep the collision and sound timelines consistent.
-3. **Audio:** click Enable audio to monitor the preview. Choose an original, traditional, or classical melody, import MIDI, select an instrument, and choose whether notes follow bounces, ring escapes, or both. Upload a bounce sample or background track. Set separate volume levels and reverb.
-4. **Export:** choose 5–120 seconds, 30/60 fps, 720p/1080p, and MP4 or WebM. On smaller screens, the top Export video button opens the export settings. The rendered video includes audio when its audio switch is enabled, regardless of whether preview monitoring is muted.
+In Ring Escape and Growing Ball, ball speed remains constant at the chosen setting (1× = 700 logical pixels/second). Gravity and bounces change direction. Physics uses a deterministic 240 Hz timeline shared by preview, seeking, collision audio, and export. String Wars detects contact continuously across ball travel and moving strings, including edge and endpoint contact.
 
-Replay repeats the current seed. New scenario chooses a new seed. Find an ending searches up to 96 candidates in a Web Worker for a natural escape near the chosen duration. Custom physics can make a close match unavailable; the app reports the best result rather than forcing an escape.
+Enable audio to monitor the preview. Choose a built-in melody and synthesized instrument, import MIDI, upload an impact sample, or add a looping background track. Notes follow selected bounce/cut/escape events. Separate volume and reverb controls are available. Imported MIDI supplies notes; collision timestamps supply their rhythm. Uploaded music is not automatically transcribed into notes. Impact samples play from their beginning for up to two seconds per contact.
 
-Safe-zone guides and editor controls are excluded from exports. Save a still downloads a PNG of the artboard.
+## Export
 
-Choose 1–12 colors in Scene. Turn off **Blend colors into a gradient** for equal bands: 50 rings and five colors gives ten rings per color, from inner to outer. When the division is uneven, the displayed counts show how the extra rings are assigned. Existing two-color presets load automatically.
+Choose 5–120 seconds, 30/60 fps, 720p/1080p, and MP4 or WebM. Videos are vertical (9:16). MP4 uses H.264/AAC; WebM uses VP9 (VP8 fallback)/Opus. Enabled project audio is included even when live monitoring is muted. Editor controls and safe-zone guides are excluded. Stills export as PNG.
 
-Motion includes **Stop shrinking after** (zero means no time limit) and **Minimum inner radius**. The time limit permanently ends contraction at that video timestamp. The radius limit pauses contraction while the ball is inside the smallest ring, then allows contraction again after it escapes. Narrow gaps or larger balls can require a larger minimum to keep the opening playable; the editor shows the effective limit.
+Encoding uses WebCodecs and runs locally. Current Chrome or Edge offers the broadest support. The bundled AAC extension handles browsers without native AAC encoding. Unsupported codecs produce an error. Long, high-resolution exports need more device memory and processing time. Cancel restores the preview. Recent exports retain up to four videos during the current session.
 
-Preview and export seek the same absolute timeline, including when sound monitoring is enabled. Preview rendering adapts to the displayed size with supersampling and smoother ring geometry. Exports and PNG snapshots explicitly render at their output resolution. The former escape ending card is removed.
+Duration matching can reject physically infeasible Ring Escape or Growing Ball settings. Adjust the duration/motion, try another seed, or turn matching off for free play.
 
-Ball speed stays constant throughout playback and export: 1× is 700 canvas pixels per second, scaled only by the Ball speed control. Gravity bends the direction of travel, and Bounce response changes the rebound angle. Neither gravity, shrinking walls, nor collisions reduce or increase the selected speed.
+## Saving
 
-## Audio synchronization
+Settings and presets use localStorage; uploaded audio uses IndexedDB. Project JSON contains settings, MIDI notes, and embedded competitor icons, but not uploaded audio files. Upload those sounds again when moving a project to another device. Competitor icons accept PNG/JPEG/WebP up to 2 MB and are cropped locally to 128 px PNGs.
 
-The simulation advances at 240 fixed steps per second and records time-stamped bounce and ring-escape events. Visual simulation and sound preparation use identical physics, parameters, and seed. Melody and effects are scheduled on that event timeline with OfflineAudioContext. Live monitoring uses the audio clock as its playback reference. Export draws explicit timestamped frames and muxes them with the rendered soundtrack.
+This is a local creator app. Accounts, payments, and cloud synchronization are not configured.
 
-Built-in instruments are synthesized. Imported MIDI files supply a note sequence; collision timing determines when its notes play. Imported bounce sounds play from their beginning for up to two seconds per impact. Background audio starts at the beginning and loops to the video length. This version does not transcribe MP3 recordings into MIDI or automatically slice a song into notes.
+## Checks and structure
 
-## Local storage
+Run `npm test` with Node.js installed. Tests cover all eight simulations, seeded motion, fixed-speed invariants, collision timing, string contacts, duration matching, seeking, particle bounds, audio-event selection, storage validation, undo/redo, controls, imports, and cancellation. Ignored browser checks in `work/` exercise actual media encoding and decoding.
 
-The current project automatically saves to localStorage. Named presets can be saved and reopened under Saved. Uploaded audio is stored in IndexedDB. Settings and MIDI notes can be exported/imported as project JSON; the JSON does not embed audio files. Upload those sounds again if moving a project to a different browser or device. Recent finished videos stay available during the current session, with up to four retained files.
+    index.html       Entry page for the React animation library
+    studio.html      Entry page for the React editor
+    src/config.js    Defaults and input validation
+    src/home/        React catalog, artwork, live demo, styles
+    src/animation/   Eight simulations, renderers, palette, planning worker
+    src/studio/      React panels, simulation controller, audio, MIDI, export, storage
+    tests/           Automated regression checks
+    vendor/          Required bundled libraries and licenses
+    work/            Ignored local checks and development files
 
-All editing, sound generation, and encoding run locally. This version is a local creator app; hosted accounts, payment processing, and cloud synchronization are not configured.
+The interface uses React and builds with Vite. Bundled animation and encoding libraries: Three.js 0.186.1 (MIT), Mediabunny 1.62.0 (MPL-2.0), and @mediabunny/aac-encoder 1.62.0 (MPL-2.0, includes an FFmpeg AAC build). Their licenses are retained in `vendor/`. Upstream: https://threejs.org/ and https://github.com/Vanilagy/mediabunny.
 
-## Export and compatibility
+## Interface direction
 
-Mediabunny provides frame-by-frame encoding and muxing. MP4 uses H.264/AVC and AAC; WebM uses VP9 and Opus. The local AAC encoder extension supplies AAC when the browser does not provide it natively. Use a current Chrome or Edge for the broadest WebCodecs support. An unsupported encoder produces an error instead of silently dropping audio or relabeling a different container. Larger exports require more processing time and memory on the user's device. Cancelling restores the live preview.
+Use warm neutral surfaces, charcoal editor panels, a restrained copper accent, small corner radii, clear labels, and real animation previews. Describe specific behavior and supported features. Keep future animations off the public library until they work.
 
-## Validation
+Avoid purple UI gradients, pill buttons, invented reviews or usage metrics, vague promotional copy, emoji icons, em dashes in interface copy, decorative scroll/cursor effects, and generated stock imagery. User-selected colors and icons inside animation projects remain customizable.
 
-Run `npm test` with Node.js installed. The tests cover deterministic physics, collision timestamps, audio-event agreement, rotation and shrink controls, boundary settings, MIDI parsing, and invalid project input.
+## Personal data and DPDP preparation
 
-Browser verification pages in work/ check actual MP4/AAC and WebM/Opus tracks, durations, frame counts, audible output, cancellation, 1080×1920 output, and custom audio storage/mixing. In the development check, the first decoded MP4 sound appeared about 6.2 ms after its collision event (below one video frame at 30 or 60 fps). This measures the tested file, not a guarantee for every imported recording or device.
+The privacy notice and request links cover personal information handled by Orbit Studio, including support/privacy emails and ordinary connection details received by the serving host. The current product has no user account database or billing backend. Personal-data access, correction, erasure, consent withdrawal, grievance, and nomination requests are routed through email drafts to gamer.robot.in@gmail.com. The operator must monitor and handle that inbox; no request is automatically submitted or completed by the frontend. The published grievance period is 90 days.
 
-## Project structure
+Project autosaving, presets, and uploaded audio use the normal editor storage behavior. Privacy requests do not trigger project deletion, storage consent gates, or editor resets. Project files can contain personal names, photos, or voices; the notice explains their on-device handling without treating every creative project as an account record. The retired browser-saving preference is ignored and does not prevent access to existing projects.
 
-```text
-index.html                 Home page
-studio.html                Ring Escape editor
-src/
-  config.js                Shared defaults and project validation
-  home/                    Library, landing-page code, live demo, and home.css
-  studio/                  Editor, audio, MIDI, storage, export, and styles.css
-  animation/               Ring physics, rendering, palette, and scenario worker
-tests/                     Automated checks
-vendor/                    Required bundled libraries and their licenses
-work/                      Ignored local downloads, backups, and browser checks
-```
+Before adding accounts or payments, implement authenticated access/correction/erasure for actual user records, appropriate consent handling, processor and retention arrangements, security, incident response, and any applicable parental-consent requirements. A privacy page alone does not establish full compliance. Confirm the real operator identity and hosting-log arrangements before public launch.
 
-Styles stay alongside the page code they belong to. Both HTML entry pages remain at the root, so existing browser addresses and saved projects keep working. Worker URLs resolve relative to their module, allowing the app to run from a subdirectory as well as the server root.
+Official sources checked on 23 October 2026:
+- Act: https://www.indiacode.nic.in/bitstream/123456789/22037/1/a2023-22.pdf
+- Rules: https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf
+- Commencement: https://www.meity.gov.in/static/uploads/2025/11/c56ceae6c383460ca69577428d36828b.pdf
+- December 2025 corrigendum: https://www.meity.gov.in/static/uploads/2025/12/3c7ebbae0e5456f493f486e6845df86b.pdf
+- October 2026 order: https://www.meity.gov.in/static/uploads/2026/10/daf495a7b5798a3dfa72a944b51fc176.pdf
 
-The unused original `animation.js` and `recording.js` prototypes are preserved locally as `work/animation.legacy.js` and `work/recording.legacy.js`. They are excluded from Git by the existing work-folder rule. The earlier app snapshot remains in `work/before-studio/`.
-
-Third-party libraries are bundled locally with their license files: Three.js 0.186.1 (MIT), Mediabunny 1.62.0 (MPL-2.0), and @mediabunny/aac-encoder 1.62.0 (MPL-2.0; includes an FFmpeg AAC build). Upstream sources: https://threejs.org/ and https://github.com/Vanilagy/mediabunny.
+Core processing obligations and data-principal rights have phased commencement scheduled eighteen months after the November 2025 notifications (May 2027). The later corrections checked do not change that period.
